@@ -18,7 +18,7 @@ the mutex is taken. The test program `signals-safe` won't deadlock when sending
 
 The POSIX standard states that the function `fork(2)` is defined as
 async-signal-safe. It means that it can be called within a signal handler. That
-said, POSIX.1-2003 also states:
+said, `signal-safety(7)` states that with POSIX.1-2003:
 
 > if an application calls fork(2) from a signal handler and any of the fork
 > handlers registered by pthread_atfork(3) calls a function that is not
@@ -27,5 +27,5 @@ said, POSIX.1-2003 also states:
 The test program `atfork` spawns new process using `fork(2)` when `SIGINT` is
 sent. It also deadlock since it uses a mutex in a its handlers set using
 `pthread_atfork(3)`. The deadlock can be avoided in the same manner as the
-last example.
+last example. The test program `atfork-safe` won't deadlock.
 
