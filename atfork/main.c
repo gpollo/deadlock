@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-#include "increment.c"
+#include <increment.c>
 
 #define FORK_COUNT 3
 #define INCREMENT_COUNT_HANDLER 100

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
-#include "increment.c"
+#include <increment.c>
 
 #define INCREMENTS 5000
 
