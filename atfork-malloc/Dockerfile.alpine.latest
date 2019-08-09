@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+RUN apk add cgdb gcc make musl-dev
+
+ARG SOURCE
+ARG BINARY
+ENV SOURCE=$SOURCE BINARY=$BINARY
+
+RUN mkdir -p "$SOURCE"
+ADD . "$SOURCE"
+WORKDIR "$SOURCE"
+RUN make
+
+ENTRYPOINT "$SOURCE/$BINARY"
+
