@@ -1,6 +1,10 @@
 #define _BSD_SOURCE
 #define _DEFAULT_SOURCE
 
+#include <features.h>
+#ifdef __GNU_LIBRARY__
+#include <gnu/libc-version.h>
+#endif
 
 #include <pthread.h>
 #include <stdio.h>
@@ -8,7 +12,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <gnu/libc-version.h>
 
 #define THREAD_COUNT 3
 
@@ -192,10 +195,14 @@ int do_fork(void)
 
 int main()
 {
+#ifdef __GLIBC__
 	printf("Using glibc %s version %s\n",
 		gnu_get_libc_release(),
 		gnu_get_libc_version()
 	);
+#else
+	printf("Using unknown libc\n");
+#endif
 
 	errno = pthread_atfork(atfork_prepare, atfork_parent, NULL);
 	if (errno) {
