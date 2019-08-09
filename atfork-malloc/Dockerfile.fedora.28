@@ -1,0 +1,15 @@
+FROM fedora:28
+
+RUN dnf install -y cgdb gcc make
+
+ARG SOURCE
+ARG BINARY
+ENV SOURCE=$SOURCE BINARY=$BINARY
+
+RUN mkdir -p "$SOURCE"
+ADD . "$SOURCE"
+WORKDIR "$SOURCE"
+RUN make
+
+ENTRYPOINT "$SOURCE/$BINARY"
+
