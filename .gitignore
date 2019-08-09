@@ -2,3 +2,5 @@
 atfork/atfork*
 dynamic-loader/dynamic-loader*
 signals/signals*
+atfork-malloc/atfork-malloc*
+
