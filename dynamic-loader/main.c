@@ -18,20 +18,20 @@ void* open_lib(void)
 {
 #ifdef SAFE_DL_CALL
 	if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL)) {
-		perror("pthread_setcancelstate() failed");
+		perror("pthread_setcancelstate");
 		return NULL;
 	}
 #endif
 
 	void* handle = dlopen("libmpv.so", RTLD_NOW);
 	if (handle == NULL) {
-		fprintf(stderr, "dlopen() failed: %s\n", dlerror());
+		fprintf(stderr, "dlopen: %s\n", dlerror());
 		return NULL;
 	}
 
 #ifdef SAFE_DL_CALL
 	if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL)) {
-		perror("pthread_setcancelstate() failed");
+		perror("pthread_setcancelstate");
 		return handle;
 	}
 #endif
@@ -47,18 +47,18 @@ void close_lib(void* handle)
 
 #ifdef SAFE_DL_CALL
 	if (pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL)) {
-		perror("pthread_setcancelstate() failed");
+		perror("pthread_setcancelstate");
 		return;
 	}
 #endif
 
 	if (dlclose(handle)) {
-		fprintf(stderr, "close() failed: %s\n", dlerror());
+		fprintf(stderr, "close: %s\n", dlerror());
 	}
 
 #ifdef SAFE_DL_CALL
 	if (pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL)) {
-		perror("pthread_setcancelstate() failed");
+		perror("pthread_setcancelstate");
 	}
 #endif
 }
@@ -69,14 +69,14 @@ void* thread_routine(void* data)
 
 #ifdef WITH_CANCEL_DEFERRED
 	if (pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL)) {
-		perror("pthread_setcanceltype() failed");
+		perror("pthread_setcanceltype");
 		return NULL;
 	}
 #endif
 
 #ifdef WITH_CANCEL_ASYNC
 	if (pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)) {
-		perror("pthread_setcanceltype() failed");
+		perror("pthread_setcanceltype");
 		return NULL;
 	}
 #endif
@@ -97,7 +97,7 @@ int main()
 	pthread_t thread;
 
 	if (signal(SIGINT, sigint_handler) == SIG_ERR) {
-		perror("signal() failed");
+		perror("signal");
 		exit(1);
 	}
 
@@ -106,20 +106,20 @@ int main()
 	while(!do_exit) {
 		printf("Creating new thread... "); fflush(stdout);
 		if (pthread_create(&thread, NULL, thread_routine, NULL)) {
-			perror("pthread_create() failed");
+			perror("pthread_create");
 			exit(1);
 		}
 		printf("done\n"); fflush(stdout);
 
 		printf("Cancelling thread... "); fflush(stdout);
 		if (pthread_cancel(thread)) {
-			perror("pthread_cancel() failed");
+			perror("pthread_cancel");
 		}
 		printf("done\n"); fflush(stdout);
 
 		printf("Joining thread... "); fflush(stdout);
 		if (pthread_join(thread, NULL)) {
-			perror("pthread_join() failed");
+			perror("pthread_join");
 		}
 		printf("done\n"); fflush(stdout);
 	}
